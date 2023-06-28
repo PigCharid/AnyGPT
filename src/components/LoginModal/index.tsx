@@ -44,8 +44,12 @@ function LogoinModal() {
     setgGtCodeLoading(true);
     try {
       const res = await generateCode({ email: form.getFieldValue("email") });
-      console.log(res);
+      console.log("res", res);
+
+      Message.success("验证码发送成功 !");
     } catch (error) {
+      // 这里要去根据报错判断   
+      Message.error("验证码发送失败!");
       console.log("error", error);
     }
     setgGtCodeLoading(false);

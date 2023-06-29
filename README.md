@@ -193,8 +193,6 @@ npm run start
 
 # 参与贡献
 
-贡献之前请先阅读 [贡献指南](./CONTRIBUTING.md)
-
 感谢所有做过贡献的人!
 
 <a href="https://github.com/PigCharid/chatgpt/graphs/contributors">

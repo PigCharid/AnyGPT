@@ -10,12 +10,9 @@
 >
 > - Charid-----VX:13721072141
 >
-> 
->
-> - <div style="display: flex; gap: 20px;">
+> - <div style="display: flex; gap: 20px; width:200px">
 >   	<div style="text-align: center">
 >   		<img style="max-width: 100%" src="./docs/images/wechat.jpg" alt="微信" />
->   		<p>WeChat Pay</p>
 >   	</div>
 >   </div>
 

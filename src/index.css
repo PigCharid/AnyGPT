@@ -12,3 +12,155 @@ body {
 .glass {
   backdrop-filter: blur(23px);
 }
+
+.loading {
+  position: relative;
+  width: 50px;
+  perspective: 200px;
+}
+
+.loading:before,
+.loading:after {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  content: "";
+  animation: jumping 0.5s infinite alternate;
+  background: #4eac81;
+}
+
+.loading:before {
+  left: 0;
+}
+
+.loading:after {
+  right: 15px;
+  animation-delay: 0.15s;
+}
+
+@keyframes jumping {
+  0% {
+    transform: scale(1) translateY(0px) rotateX(0deg);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    transform: scale(1.2) translateY(-25px) rotateX(45deg);
+    background: #000;
+    box-shadow: 0 25px 40px #000;
+  }
+}
+
+.sendLoading,
+.sendLoading > div {
+  position: relative;
+  box-sizing: border-box;
+}
+
+.sendLoading {
+  display: block;
+  font-size: 0;
+  color: #000;
+}
+
+.sendLoading.la-dark {
+  color: #333;
+}
+
+.sendLoading > div {
+  display: inline-block;
+  float: none;
+  background-color: currentColor;
+  border: 0 solid currentColor;
+}
+
+.sendLoading {
+  width: 42px;
+  height: 32px;
+}
+
+.sendLoading > div:nth-child(1) {
+  position: absolute;
+  bottom: 32%;
+  left: 18%;
+  width: 14px;
+  height: 14px;
+  border-radius: 100%;
+  transform-origin: center bottom;
+  animation: ball-climbing-dot-jump 0.6s ease-in-out infinite;
+}
+
+.sendLoading > div:not(:nth-child(1)) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 2px;
+  border-radius: 0;
+  transform: translate(60%, 0);
+  animation: ball-climbing-dot-steps 1.8s linear infinite;
+}
+
+.sendLoading > div:not(:nth-child(1)):nth-child(2) {
+  animation-delay: 0ms;
+}
+
+.sendLoading > div:not(:nth-child(1)):nth-child(3) {
+  animation-delay: -600ms;
+}
+
+.sendLoading > div:not(:nth-child(1)):nth-child(4) {
+  animation-delay: -1200ms;
+}
+
+@keyframes ball-climbing-dot-jump {
+  0% {
+    transform: scale(1, 0.7);
+  }
+
+  20% {
+    transform: scale(0.7, 1.2);
+  }
+
+  40% {
+    transform: scale(1, 1);
+  }
+
+  50% {
+    bottom: 125%;
+  }
+
+  46% {
+    transform: scale(1, 1);
+  }
+
+  80% {
+    transform: scale(0.7, 1.2);
+  }
+
+  90% {
+    transform: scale(0.7, 1.2);
+  }
+
+  100% {
+    transform: scale(1, 0.7);
+  }
+}
+
+@keyframes ball-climbing-dot-steps {
+  0% {
+    top: 0;
+    right: 0;
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    right: 100%;
+    opacity: 0;
+  }
+}

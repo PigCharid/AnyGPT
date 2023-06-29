@@ -13,5 +13,5 @@ export const getProjects = () => API.get("/project");
 export const createProject = (params: RequestCreateProjectParams) => API.post("/project/create", params);
 
 // aichat
-export const aiChat = () => API.post("/aichat");
+export const aiChat = (params: { prompt: string }) => API.post("/aichat", params);
 

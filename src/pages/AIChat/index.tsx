@@ -1,10 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { aiChat } from "../../request";
 import { chatStore } from "../../store";
 import { generateUUID, formatTime } from "../../utils";
 import { Message } from "@arco-design/web-react";
+import { useScroll } from "../../hooks/useScroll";
 const AIChat = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { scrollToBottomIfAtBottom, scrollToBottom } = useScroll(
+    scrollRef.current
+  );
   const [prompt, setPrompt] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
   const {
     chats,
     addChat,
@@ -13,23 +19,36 @@ const AIChat = () => {
     delChat,
     selectChatId,
     setChatInfo,
+    setChatDataInfo,
   } = chatStore();
 
-  // const handleAIChat = () => {
-  //   console.log("aaaaaaa");
-  //   const req = async () => {
-  //     try {
-  //       const result = await aiChat();
-  //       console.log("result", result);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   req();
-  // };
+  const handleAIChatToServer = (prompt: string, id: string) => {
+    console.log("prompt", prompt);
+    console.log("id", id);
+
+    const req = async () => {
+      try {
+        const result = await aiChat({ prompt });
+        console.log("回复的内容", result.data.result?.content);
+        if (result.data.result) {
+          setChatDataInfo(selectChatId, id, {
+            status: "pass",
+            text: result.data.result?.content,
+          });
+        } else {
+          // 错误的处理
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setChatLoading(false);
+    };
+    req();
+  };
 
   const handleAIChat = () => {
     if (prompt === "") return Message.error("请输入正确的信息");
+    setChatLoading(true);
     console.log("prompt", prompt);
     let userMessageId = generateUUID();
     const assistantMessageId = generateUUID();
@@ -49,6 +68,9 @@ const AIChat = () => {
       role: "assistant",
       // requestOptions,
     });
+    handleAIChatToServer(prompt, assistantMessageId);
+    scrollToBottomIfAtBottom();
+    setPrompt("");
   };
   useEffect(() => {
     if (chats.length <= 0) {
@@ -67,7 +89,11 @@ const AIChat = () => {
     }
     return chatList[0].data;
   }, [selectChatId, chats]);
-
+  useLayoutEffect(() => {
+    if (scrollRef) {
+      scrollToBottom();
+    }
+  }, [selectChatId, chats, scrollToBottom]);
   // // 更改对话信息
   // const handleChangeChat = (id: string) => {
   //   changeSelectChatId(id);
@@ -165,9 +191,12 @@ const AIChat = () => {
             <div className="ml-2 font-bold text-2xl">清除所有对话</div>
           </div>
         </div>
-        <div className="flex flex-col flex-auto h-full ">
+        <div className=" flex flex-col flex-auto h-full ">
           <div className="flex flex-col flex-auto flex-shrink-0  bg-transparent h-full p-4">
-            <div className="flex flex-col h-full overflow-x-auto mb-4">
+            <div
+              ref={scrollRef}
+              className="  flex flex-col h-full overflow-x-auto mb-4"
+            >
               <div className="flex flex-col h-full">
                 <div className="grid grid-cols-12 gap-y-2">
                   {chatMessages.map((item) => {
@@ -178,7 +207,7 @@ const AIChat = () => {
                       >
                         <div className="flex items-center justify-start flex-row-reverse">
                           <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                            A
+                            Me
                           </div>
                           <div className="relative mr-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl">
                             <div>{item.text}</div>
@@ -192,11 +221,15 @@ const AIChat = () => {
                       >
                         <div className="flex flex-row items-center">
                           <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                            B
+                            GPT
                           </div>
-                          <div className="relative ml-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl">
-                            <div>Hey How are you today?</div>
-                          </div>
+                          {item.status === "loading" ? (
+                            <div className="loading ml-[10px]"></div>
+                          ) : (
+                            <div className="relative ml-3 text-sm bg-white text-black py-2 px-4 shadow rounded-xl">
+                              <div>{item.text}</div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
@@ -208,13 +241,19 @@ const AIChat = () => {
               <div className="flex-grow ml-4">
                 <div className="relative w-full">
                   <input
+                    disabled={chatLoading}
+                    placeholder={chatLoading ? "1.0版本请先等上一条回复" : ""}
                     onKeyUp={(event) => {
-                      if (event.key == "Enter") {
+                      if (event.key === "Enter") {
+                        scrollToBottomIfAtBottom();
                         handleAIChat();
                       }
                     }}
                     value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
+                    onChange={(e) => {
+                      scrollToBottomIfAtBottom();
+                      setPrompt(e.target.value);
+                    }}
                     type="text"
                     className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                   />
@@ -222,26 +261,40 @@ const AIChat = () => {
               </div>
               <div className="ml-4">
                 <button
-                  onClick={() => handleAIChat()}
+                  disabled={chatLoading}
+                  onClick={() => {
+                    handleAIChat();
+                  }}
                   className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
                 >
-                  <span>Send</span>
-                  <span className="ml-2">
-                    <svg
-                      className="w-4 h-4 transform rotate-45 -mt-px"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                      ></path>
-                    </svg>
-                  </span>
+                  {chatLoading ? (
+                    <div className="sendLoading">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  ) : (
+                    <>
+                      <span>Send</span>
+                      <span className="ml-2">
+                        <svg
+                          className="w-4 h-4 transform rotate-45 -mt-px"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                          ></path>
+                        </svg>
+                      </span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>

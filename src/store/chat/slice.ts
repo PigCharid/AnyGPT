@@ -21,9 +21,14 @@ export interface ChatState {
     data?: ChatGpt,
     info?: ChatsInfo | { [key: string]: any }
   ) => void
+  // 修改对话数据
+  setChatDataInfo: (
+    id: string | number,
+    messageId: string | number,
+    info?: ChatGpt | { [key: string]: any }
+  ) => void
 
 }
-
 const chatStore = create<ChatState>()(
   persist(
     (set, get) => ({
@@ -87,6 +92,34 @@ const chatStore = create<ChatState>()(
             chats: newChats
           }
         }),
+      setChatDataInfo: (id, messageId, info) =>
+        set((state: ChatState) => {
+          const newChats = state.chats.map((item) => {
+            if (item.id === id) {
+              const newData = item.data.map((m) => {
+                if (m.id === messageId) {
+                  return {
+                    ...m,
+                    ...info
+                  }
+                }
+                return m
+              })
+
+              const dataFilter = newData.filter((d) => d.id === messageId)
+              const chatData = { id: messageId, ...info } as ChatGpt
+              return {
+                ...item,
+                data: dataFilter.length <= 0 ? [...newData, { ...chatData }] : [...newData]
+              }
+            }
+            return item
+          })
+
+          return {
+            chats: newChats
+          }
+        })
 
     }),
 

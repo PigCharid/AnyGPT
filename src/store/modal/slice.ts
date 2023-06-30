@@ -12,6 +12,11 @@ export interface modalState {
     createProjectModalVisiable: boolean
     // 修改登录弹窗
     setCreateProjectModalVisiable: (value: boolean) => void
+
+    // 创建弹窗的开关
+    isActive: string | undefined
+    // 修改登录弹窗
+    setIsActive: (value: string) => void
 }
 
 
@@ -23,7 +28,9 @@ const modalStore = create<modalState>(
         createProjectModalVisiable: false,
         setCreateProjectModalVisiable: (value) => set({ createProjectModalVisiable: value }),
         createProjectChoiceModalVisiable: false,
-        setCreateProjectChoiceModalVisiable: (value) => set({ createProjectChoiceModalVisiable: value })
+        setCreateProjectChoiceModalVisiable: (value) => set({ createProjectChoiceModalVisiable: value }),
+        isActive: undefined,
+        setIsActive: (value) => set({ isActive: value })
     })
 )
 

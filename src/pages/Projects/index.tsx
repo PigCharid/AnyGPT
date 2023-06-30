@@ -33,8 +33,8 @@ const Projects = () => {
       </div>
       <div>搜索设置</div>
       <div className="flex gap-3 justify-start items-center flex-wrap px-4">
-        {project_info?.map(() => (
-          <Project />
+        {project_info?.map((item) => (
+          <Project key={item._id} />
         ))}
       </div>
     </div>

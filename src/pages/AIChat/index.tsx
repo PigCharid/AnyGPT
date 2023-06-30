@@ -23,9 +23,6 @@ const AIChat = () => {
   } = chatStore();
 
   const handleAIChatToServer = (prompt: string, id: string) => {
-    console.log("prompt", prompt);
-    console.log("id", id);
-
     const req = async () => {
       try {
         const result = await aiChat({ prompt });

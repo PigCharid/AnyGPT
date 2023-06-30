@@ -2,13 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  padding: 0;
+  margin: 0;
+}
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 75px;
 }
 body {
-  background-color: #1f1f31;
+  background-color: #1F1F32;
 }
+
+.bgModify{
+  background: #1F1F32 radial-gradient(rgba(30, 177, 96, 1), #1F1F32);
+  transition: background-color 0.5s;
+}
+
 .glass {
   backdrop-filter: blur(23px);
 }
@@ -163,4 +173,40 @@ body {
     right: 100%;
     opacity: 0;
   }
+}
+
+
+
+.progress {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--accent);
+  bottom: 100px;
+}
+
+.parallax {
+  overflow: hidden;
+  letter-spacing: -2px;
+  line-height: 0.8;
+  margin: 0;
+  white-space: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.parallax .scroller {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 64px;
+  display: flex;
+  white-space: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.parallax span {
+  display: block;
+  margin-right: 30px;
 }

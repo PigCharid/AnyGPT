@@ -8,10 +8,8 @@ const Navbar = () => {
   const navigator = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const { user_info, logout } = userStore();
-  const { logoinModalVisiable, setLogoinModalVisiable } = modalStore();
+  const { setLogoinModalVisiable, isActive, setIsActive } = modalStore();
   const [infoMoadlVisible, setInfoMoadlVisible] = useState(false);
-  console.log("user_info", user_info);
-  console.log("logoinModalVisiable", logoinModalVisiable);
   useEffect(() => {
     const onScroll = () => {
       if (window.scrollY > 100) {
@@ -26,27 +24,25 @@ const Navbar = () => {
   return (
     <div
       className={`${
-        scrolled ? "py-2 glass" : "bg-transparent py-4"
+        scrolled ? "py-0 glass" : "bg-transparent py-2"
       } z-10 fixed px-8  text-white   w-full  border-b-[1px] border-b-[#335] flex justify-between`}
     >
       <div className="flex gap-[100px]">
         <div className="flex items-center gap-2 ">
           <img src={logo} alt="logo" className="w-[40px]"></img>
-          <p className="text-3xl font-bold">Logo</p>
+          <p className="text-3xl font-bold">AnyGPT</p>
         </div>
         <div className="flex gap-6">
           {navlist.map((el, i) => (
             <div
               key={i}
               onClick={() => {
-                //   setIsActive(el.link);
+                setIsActive(el.link);
                 navigator(el.link);
               }}
-              // className={`${
-              //   isActive == el.link && "border-2  border-white"
-              // } cursor-pointer hover:bg-slate-700 font-bold   rounded-md hover:rounded-xl  p-2 m-2 text-xl`}
-              className="
-             cursor-pointer hover:bg-slate-700 font-bold   rounded-md hover:rounded-xl  p-2  text-xl"
+              className={`${
+                isActive === el.link && "border-[1px] border-white"
+              } cursor-pointer hover:bg-slate-700 font-bold   rounded-md hover:rounded-xl  p-2 m-2 text-xl `}
             >
               {el.name}
             </div>

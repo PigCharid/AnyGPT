@@ -106,7 +106,7 @@ src/request/index.ts
 //本地请求
 const API = axios.create({ baseURL: "http://localhost:8000" });
 //服务器请求
-const API = axios.create({ baseURL: "https://api.charid.xyz" });
+const API = axios.create({ baseURL: "https://api.anygpt.org" });
 ```
 
 > 注意：邮箱验证码是利用Gmail，AI模型用的chatgpt ，国内本地起后端服务的话验证码接口和chat接口请求可能会失败

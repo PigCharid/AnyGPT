@@ -52,14 +52,6 @@ const ParallaxText = ({ children, baseVelocity = 100 }: ParallaxProps) => {
 
     baseX.set(baseX.get() + moveBy);
   });
-
-  /**
-   * The number of times to repeat the child text should be dynamically calculated
-   * based on the size of the text and viewport. Likewise, the x motion value is
-   * currently wrapped between -20 and -45% - this 25% is derived from the fact
-   * we have four children (100% / 4). This would also want deriving from the
-   * dynamically generated number of children.
-   */
   return (
     <div className="parallax">
       <motion.div className="scroller" style={{ x }}>
@@ -80,6 +72,7 @@ const Home = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    const y = window.innerHeight;
     let Engine = Matter.Engine,
       Render = Matter.Render,
       MouseConstraint = Matter.MouseConstraint,
@@ -97,7 +90,7 @@ const Home = () => {
       engine: engine,
       canvas: canvasRef.current,
       options: {
-        height: 640,
+        height: y,
         background: "transparent",
         wireframes: false,
       },
@@ -118,20 +111,20 @@ const Home = () => {
     Composite.add(world, [
       // walls
       // Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
-      Bodies.rectangle(400, 640, 800, 2, {
+      Bodies.rectangle(400, y, 800, 2, {
         isStatic: true,
         render: {
           fillStyle: "#26263D",
         },
       }),
-      Bodies.rectangle(800, 320, 1, 6400, {
+      Bodies.rectangle(800, y / 2, 1, 6400, {
         isStatic: true,
         render: {
           fillStyle: "#26263D",
         },
       }),
       // 左偏移  中心向下    宽度     长度
-      Bodies.rectangle(0, 320, 1, 6400, {
+      Bodies.rectangle(0, y / 2, 1, 6400, {
         isStatic: true,
         render: {
           fillStyle: "#26263D",

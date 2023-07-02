@@ -1,4 +1,4 @@
-import React from "react";
+import { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./pages/App";
@@ -9,8 +9,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <BrowserRouter>
-    <React.Suspense fallback={<div>加载中....</div>}>
+    <Suspense fallback={<div>加载中....</div>}>
       <App />
-    </React.Suspense>
+    </Suspense>
   </BrowserRouter>
 );

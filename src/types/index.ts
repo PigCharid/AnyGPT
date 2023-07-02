@@ -63,3 +63,4 @@ export interface ChatGpt {
     status: 'pass' | 'loading' | 'error'
     role: 'assistant' | 'user' | string
 }
+

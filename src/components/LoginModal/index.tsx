@@ -40,17 +40,13 @@ function LogoinModal() {
     });
   };
   const getCode = async () => {
-    console.log(form.getFieldValue("email"));
     setgGtCodeLoading(true);
     try {
-      const res = await generateCode({ email: form.getFieldValue("email") });
-      console.log("res", res);
-
-      Message.success("验证码发送成功 !");
-    } catch (error) {
-      // 这里要去根据报错判断   
-      Message.error("验证码发送失败!");
-      console.log("error", error);
+      await generateCode({ email: form.getFieldValue("email") });
+      Message.success("验证码发送成功!");
+    } catch (error: any) {
+      // 这里要去根据报错判断
+      Message.error(error.response.data.message);
     }
     setgGtCodeLoading(false);
   };

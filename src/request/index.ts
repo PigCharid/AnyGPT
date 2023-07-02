@@ -2,7 +2,7 @@ import axios from "axios";
 import { RequestLoginParams, RequestCreateProjectParams } from '../types'
 
 // const API = axios.create({ baseURL: "http://localhost:8000" });
-const API = axios.create({ baseURL: "https://api.charid.xyz" });
+const API = axios.create({ baseURL: "https://api.anygpt.org" });
 export const signIn = (params: RequestLoginParams) => API.post("/user/signin", params);
 export const generateCode = (params: RequestLoginParams) => API.post("/generatecode", params);
 export const signup = (params: RequestLoginParams) => API.post("/user/signup", params);

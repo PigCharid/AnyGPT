@@ -1,0 +1,22 @@
+.arco-form-label-item > label {
+  color: white;
+}
+
+.arco-tabs-header-title {
+  color: white;
+}
+.arco-modal-simple {
+  padding: 10px 5px 10px 5px;
+}
+
+.arco-tabs-header-wrapper {
+  justify-content: center;
+}
+
+.arco-tabs-header-ink {
+  background-color: #4eac81;
+}
+
+.arco-btn-primary:not(.arco-btn-disabled) {
+  background-color: #4eac81;
+}

@@ -4,37 +4,48 @@ const navlist = [
         link: "/",
     },
     {
-        name: "浏览分享",
-        link: "/projects",
-    },
-    // {
-    //     name: "AI创业画布",
-    //     link: "/AIDraw",
-    // },
-    {
         name: "AI中心",
         link: "/aicenter",
     },
-    // {
-    //     name: "AI作画",
-    //     link: "/aidraw",
-    // },
-    // {
-    //     name: "AIPPT",
-    //     link: "/aippt",
-    // },
-    // {
-    //     name: "AIUI",
-    //     link: "/aiui",
-    // },
-    // {
-    //     name: "充值",
-    //     link: "/in",
-    // },
     {
-        name: "个人中心",
-        link: "/usercenter",
+        name: "积分中心",
+        link: "/integral",
+    },
+
+];
+
+const completeProduct = [
+    {
+        name: "AI咨询",
+        link: "/aicenter/aichat",
     },
 ];
 
-export { navlist }
+const commingProduct = [
+    {
+        name: "AI助手",
+    },
+    {
+        name: "AI文章总结",
+    },
+    {
+        name: "AI生成图片",
+    },
+    {
+        name: "AI生成创业画布",
+    },
+    {
+        name: "AI生成PPT",
+    },
+    {
+        name: "AI生成Word",
+    },
+    {
+        name: "AI生成PDF",
+    },
+    {
+        name: "AI生成UI",
+    },
+];
+
+export { navlist, completeProduct, commingProduct }

@@ -10,6 +10,7 @@ import { modalStore } from "../store";
 import { useEffect } from "react";
 import AICenter from "./AICenter";
 import AIChat from "./AIChat";
+import Integral from "./Integral";
 const App = () => {
   const location = useLocation();
   const { isActive, setIsActive } = modalStore();
@@ -24,7 +25,8 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route element={<Home />} path="/"></Route>
-        <Route element={<Projects />} path="/projects"></Route>
+        {/* <Route element={<Projects />} path="/projects"></Route> */}
+        <Route element={<Integral />} path="/integral"></Route>
         <Route element={<AICenter />} path="/aicenter"></Route>
         <Route element={<AIChat />} path="/aicenter/aichat"></Route>
       </Routes>

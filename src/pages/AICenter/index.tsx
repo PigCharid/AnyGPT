@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Preload } from "@react-three/drei";
 import * as random from "maath/random/dist/maath-random.esm";
+import { completeProduct, commingProduct } from "../../assets/constant";
+import { Message } from "@arco-design/web-react";
 const Stars = (props: any) => {
   const ref: any = useRef(null);
   const [sphere] = useState(() =>
@@ -43,42 +45,39 @@ const AICenter = () => {
         </Canvas>
       </div>
       <div className="h-[100vh] pt-[10px] flex flex-col justify-center items-center  ">
-        <div className="text-5xl font-bold">快选择你想要的使用的AI工具吧</div>
+        <div className="text-5xl font-bold md:w-full text-center w-[90%]">快选择你想要的使用的AI工具吧</div>
         <div className="w-ful flex justify-center items-center  pt-[120px] gap-10">
-          <div className="w-[800px] flex gap-10 flex-wrap">
-            <button
-              onClick={() => {
-                navgate("/aicenter/aichat");
-              }}
-              className="p-2 border-[1px] text-xl font-bold rounded-lg hover:scale-[1.2]"
-            >
-              AI咨询
-            </button>
-            <button className="p-2 border-[1px] text-xl font-bold  rounded-lg hover:scale-[1.2]">
-              AI生成图片
-            </button>
-            <button className="p-2 border-[1px] text-xl font-bold rounded-lg hover:scale-[1.2]">
-              AI生成创业画布
-            </button>
-            <button className="p-2 border-[1px] text-xl font-bold rounded-lg hover:scale-[1.2]">
-              AI生成PPT
-            </button>
-            <button className="p-2 border-[1px] text-xl font-bold rounded-lg hover:scale-[1.2]">
-              AI生成word
-            </button>
-            <button className="p-2 border-[1px] text-xl font-bold rounded-lg hover:scale-[1.2]">
-              AI生成PDF
-            </button>
-            <button className="p-2 border-[1px] text-xl font-bold rounded-lg hover:scale-[1.2]">
-              AI生成UI
-            </button>
+          <div className="md:w-[800px] flex gap-10 flex-wrap justify-center">
+            {completeProduct.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => {
+                  navgate(item.link);
+                }}
+                className="p-2 border-[1px] border-minorColor  text-xl font-bold rounded-lg hover:scale-[1.2]"
+              >
+                {item.name}
+              </button>
+            ))}
+
+            {commingProduct.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => {
+                  Message.info("即将上线，敬请期待");
+                }}
+                className="p-2 border-[1px] border-gray-500 text-xl font-bold rounded-lg hover:scale-[1.2]"
+              >
+                {item.name}
+              </button>
+            ))}
           </div>
         </div>
         <div className="text-center text-xl font-bold pt-[50px]">
           找不到您想要的工具？
         </div>
-        <div className="flex flex-row items-center h-16 rounded-xl bg-transparent text-black w-[800px] px-4">
-          <div className="flex-grow ml-4">
+        <div className="flex flex-row items-center h-16 rounded-xl bg-transparent text-black w-[90%] md:w-[800px] px-2 md:px-4 ">
+          <div className="flex-grow ">
             <div className="relative w-full">
               <input
                 placeholder={"请告诉我们你想要使用的工具类型"}

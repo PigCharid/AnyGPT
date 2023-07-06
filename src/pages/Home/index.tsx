@@ -10,6 +10,7 @@ import {
   useAnimationFrame,
 } from "framer-motion";
 import { wrap } from "@motionone/utils";
+import { useNavigate } from "react-router-dom";
 interface ParallaxProps {
   children: string;
   baseVelocity: number;
@@ -70,9 +71,9 @@ const ParallaxText = ({ children, baseVelocity = 100 }: ParallaxProps) => {
 const Home = () => {
   const boxRef = useRef(null);
   const canvasRef = useRef(null);
+  const navigator = useNavigate();
 
   useEffect(() => {
-    const y = window.innerHeight;
     let Engine = Matter.Engine,
       Render = Matter.Render,
       MouseConstraint = Matter.MouseConstraint,
@@ -90,14 +91,19 @@ const Home = () => {
       engine: engine,
       canvas: canvasRef.current,
       options: {
-        height: y,
+        width: window.innerWidth / 2,
+        height: window.innerHeight,
         background: "transparent",
         wireframes: false,
+        showAngleIndicator: false,
       },
     });
 
-    for (let i = 0; i < 10; i++) {
-      const circle = Matter.Bodies.circle(80, 80, 80, {
+    for (let i = 0; i < 15; i++) {
+      const circle = Matter.Bodies.circle(window.innerWidth / 2 - 160, 80, 80, {
+        // friction: 0.3,
+        // frictionAir: 0.00001,
+        // restitution: 0.8,
         render: {
           sprite: {
             // 使用精灵
@@ -111,20 +117,26 @@ const Home = () => {
     Composite.add(world, [
       // walls
       // Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
-      Bodies.rectangle(400, y, 800, 2, {
-        isStatic: true,
-        render: {
-          fillStyle: "#26263D",
-        },
-      }),
-      Bodies.rectangle(800, y / 2, 1, 6400, {
+      Bodies.rectangle(
+        window.innerWidth / 4,
+        window.innerHeight,
+        window.innerWidth / 2,
+        2,
+        {
+          isStatic: true,
+          render: {
+            fillStyle: "#26263D",
+          },
+        }
+      ),
+      Bodies.rectangle(window.innerWidth / 2, window.innerHeight / 2, 1, 6400, {
         isStatic: true,
         render: {
           fillStyle: "#26263D",
         },
       }),
       // 左偏移  中心向下    宽度     长度
-      Bodies.rectangle(0, y / 2, 1, 6400, {
+      Bodies.rectangle(0, window.innerHeight / 2, 1, 6400, {
         isStatic: true,
         render: {
           fillStyle: "#26263D",
@@ -142,31 +154,51 @@ const Home = () => {
           },
         },
       });
+
     Composite.add(world, mouseConstraint);
+    // allow scroll through the canvas
+    mouseConstraint.mouse.element.removeEventListener(
+      "mousewheel",
+      mouseConstraint.mouse.mousewheel
+    );
+    mouseConstraint.mouse.element.removeEventListener(
+      "DOMMouseScroll",
+      mouseConstraint.mouse.mousewheel
+    );
     Matter.Runner.run(engine);
     Render.run(render);
   }, []);
   return (
     <div className="w-full h-auto bgModify ">
-      <div className="bg-[url('./assets/images/home_bg.png')] bg-no-repeat bg-cover  h-[100vh] relative  ">
-        <div className="flex  pl-[10vw]  ">
-          <div className="pt-[140px] font-bold">
-            <p className="text-[4vw]">开始你的</p>
-            <p className="text-[7vw] text-[#602e90] mt-[-10px]">AI创作</p>
-            <p className="text-[4vw] mt-[-10px]">之旅</p>
-            <div className="pt-[20px]">
+      <div className="bg-[url('./assets/images/home_bg.png')] bg-no-repeat bg-cover  h-[100vh] relative">
+        <div className="flex md:pl-[10vw] justify-center">
+          <div className="pt-[140px] font-bold  z-[10]">
+            <p className="text-6xl md:text-[4vw]">开始你的</p>
+            <p className="text-8xl md:text-[7vw] my-[10px] text-[#602e90]">
+              AI创作
+            </p>
+            <p className="text-6xl md:text-[4vw] mt-[-10px]">之旅</p>
+            <div className="text-xl md:text-[1vw] pt-[20px]">
               <p>10+</p>
               <p>适用场景</p>
             </div>
-            <div className="pl-[200px] mt-[-20px]">
-              <p>1000+</p>
+            <div className="text-xl md:text-[1vw] pl-[200px] mt-[-20px]">
+              <p className="">1000+</p>
               <p>项目分享</p>
             </div>
-            <button className="mt-10 px-10 py-4 bgModify text-xl w-full rounded-2xl">
+            <button
+              onClick={() => {
+                navigator("/aicenter");
+              }}
+              className="mt-10 px-10 py-4 bgModify text-xl w-full rounded-2xl hover:bg-none hover:scale-125 "
+            >
+              进入AI中心
+            </button>
+            <button className="md:ml-10 mt-10 px-10 py-4 bgModify text-xl w-full rounded-2xl hover:bg-none hover:scale-125">
               浏览项目分享
             </button>
           </div>
-          <div className="pl-[16vw] ">
+          <div className="hidden md:flex pl-[19vw]">
             <div className="bg-transparent" ref={boxRef}>
               <canvas className="bg-transparent" ref={canvasRef} />
             </div>
@@ -181,25 +213,9 @@ const Home = () => {
           <ParallaxText baseVelocity={5}>10+途径、1000+作品</ParallaxText>
         </div>
       </div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
-      <div>别人分享的展示</div>
+      <div className="flex justify-center items-center py-[300px] text-5xl font-bold">
+        敬请期待
+      </div>
     </div>
   );
 };

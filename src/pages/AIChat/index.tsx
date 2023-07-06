@@ -4,6 +4,8 @@ import { chatStore } from "../../store";
 import { generateUUID, formatTime } from "../../utils";
 import { Message } from "@arco-design/web-react";
 import { useScroll } from "../../hooks/useScroll";
+import deletelogo from "../../assets/images/delete.svg";
+
 const AIChat = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { scrollToBottomIfAtBottom, scrollToBottom } = useScroll(
@@ -22,15 +24,19 @@ const AIChat = () => {
     setChatDataInfo,
   } = chatStore();
 
-  const handleAIChatToServer = (prompt: string, id: string) => {
+  const handleAIChatToServer = (
+    id: string,
+    prompt: string,
+    messageId: string
+  ) => {
     const req = async () => {
       try {
-        const result = await aiChat({ prompt });
-        console.log("回复的内容", result.data.result?.content);
-        if (result.data.result) {
-          setChatDataInfo(selectChatId, id, {
+        const result = await aiChat({ id, role: "user", prompt });
+        console.log("回复的内容", result.data.message?.content);
+        if (result.data.message) {
+          setChatDataInfo(selectChatId, messageId, {
             status: "pass",
-            text: result.data.result?.content,
+            text: result.data.message?.content,
           });
         } else {
           // 错误的处理
@@ -65,7 +71,7 @@ const AIChat = () => {
       role: "assistant",
       // requestOptions,
     });
-    handleAIChatToServer(prompt, assistantMessageId);
+    handleAIChatToServer(String(selectChatId), prompt, assistantMessageId);
     scrollToBottomIfAtBottom();
     setPrompt("");
   };
@@ -103,38 +109,11 @@ const AIChat = () => {
   //   const
   return (
     <div className="flex h-screen antialiased text-white">
-      <div className="flex flex-row h-[90vh] w-full overflow-x-hidden mt-[82px] fixed">
-        <div className="flex flex-col py-8 pl-6 pr-2 w-64 h-full bg-transparent flex-shrink-0 border-r-[1px]">
-          <div className="flex flex-row items-center justify-center h-12 w-full border-[1px]">
-            <div className="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10">
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                ></path>
-              </svg>
-            </div>
-            <div onClick={() => addChat()} className="ml-2 font-bold text-2xl">
-              新建对话
-            </div>
-          </div>
-          {chats.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-row items-center justify-center h-12 w-full border-[1px]"
-              onClick={() => {
-                changeSelectChatId(item.id);
-              }}
-            >
-              <div className="flex items-center  rounded-2xl text-indigo-700  h-4 w-4">
+      <div className="flex flex-row h-[92vh] w-full overflow-x-hidden mt-[78px] fixed">
+        <div className="hidden lg:flex flex-col justify-between py-8  px-2 w-64 h-full bg-transparent flex-shrink-0 border-r-[1px] border-[#333353]">
+          <div>
+            <div className="flex flex-row items-center justify-center p-2 w-full cursor-pointer rounded-xl hover:bg-minorColor mb-[20px]">
+              <div className="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10">
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -150,24 +129,67 @@ const AIChat = () => {
                   ></path>
                 </svg>
               </div>
-              <div className="ml-2 font-bold text-2xl">新的对话</div>
               <div
-                onClick={(event) => {
-                  event.stopPropagation();
-                  delChat(item.id);
-                }}
-                className="font-bold text-lg cursor-pointer"
+                onClick={() => addChat()}
+                className="ml-2 font-bold text-2xl"
               >
-                删除
+                新建对话
               </div>
             </div>
-          ))}
+            <div className="flex flex-col gap-4 border-2 p-2  h-[70vh] overflow-scroll rounded-xl ">
+              {chats.map((item) => (
+                <div
+                  key={item.id}
+                  className={`${
+                    selectChatId === item.id && "border-2"
+                  } flex flex-row items-center justify-between p-1 w-full cursor-pointer hover:bg-minorColor rounded-xl`}
+                  onClick={() => {
+                    changeSelectChatId(item.id);
+                  }}
+                >
+                  <div className="flex items-center">
+                    <div className="flex items-center  rounded-2xl text-indigo-700  h-4 w-4">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div className="ml-1 font-bold text-sm">新的对话</div>
+                  </div>
+
+                  <div
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      delChat(item.id);
+                    }}
+                    className="flex justify-center items-center hover:scale-125"
+                  >
+                    <img
+                      src={deletelogo}
+                      alt="deletelogo"
+                      className="w-[20px]"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
           <div
             onClick={() => {
               clearChats();
             }}
-            className="flex flex-row items-center justify-center h-12 w-full border-[1px]"
+            className="flex flex-row items-center justify-center h-12 w-full rounded-xl hover:bg-minorColor cursor-pointer"
           >
             <div className="flex items-center  rounded-2xl text-indigo-700  h-4 w-4">
               <svg
@@ -188,7 +210,7 @@ const AIChat = () => {
             <div className="ml-2 font-bold text-2xl">清除所有对话</div>
           </div>
         </div>
-        <div className=" flex flex-col flex-auto h-full ">
+        <div className=" flex flex-col flex-auto  md:h-full h-[80vh] ">
           <div className="flex flex-col flex-auto flex-shrink-0  bg-transparent h-full p-4">
             <div
               ref={scrollRef}
@@ -273,7 +295,7 @@ const AIChat = () => {
                     </div>
                   ) : (
                     <>
-                      <span>Send</span>
+                      <span>发送</span>
                       <span className="ml-2">
                         <svg
                           className="w-4 h-4 transform rotate-45 -mt-px"

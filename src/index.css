@@ -11,11 +11,11 @@ html {
   scroll-padding-top: 75px;
 }
 body {
-  background-color: #1F1F32;
+  background-color: #1f1f32;
 }
 
-.bgModify{
-  background: #1F1F32 radial-gradient(rgba(30, 177, 96, 1), #1F1F32);
+.bgModify {
+  background: #1f1f32 radial-gradient(rgba(30, 177, 96, 1), #1f1f32);
   transition: background-color 0.5s;
 }
 
@@ -175,8 +175,6 @@ body {
   }
 }
 
-
-
 .progress {
   position: fixed;
   left: 0;
@@ -210,3 +208,5 @@ body {
   display: block;
   margin-right: 30px;
 }
+
+

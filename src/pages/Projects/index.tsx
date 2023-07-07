@@ -6,11 +6,9 @@ import { projectAsync } from "../../store/async";
 const Projects = () => {
   const { setCreateProjectChoiceModalVisiable } = modalStore();
   const { project_info } = projectStore();
-  console.log("project_info", project_info);
   useEffect(() => {
     const loadProjects = async () => {
       const result = await projectAsync.fetchGetProject();
-      console.log(result);
     };
     if (!project_info) {
       loadProjects();

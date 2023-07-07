@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Modal,
   Button,
@@ -14,6 +14,7 @@ import { userAsync } from "../../store/async";
 import { generateCode } from "../../request";
 import { RequestLoginParams } from "../../types";
 import "./index.css";
+import { setInterval } from "timers";
 
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
@@ -26,42 +27,49 @@ function LogoinModal() {
   const [formCodeLogoIn] = Form.useForm();
   const [formRegister] = Form.useForm();
   const [getCodeLoading, setgGtCodeLoading] = useState(false);
+  const [seconds, setSeconds] = useState(0);
   const submitSign = async () => {
     setConfirmLoading(true);
-    let requestLoginParams!: RequestLoginParams;
     if (activeTab === "1") {
       formPwdLogoIn.validate().then(async (res) => {
-        requestLoginParams = res;
+        const result: any = await userAsync.fetchLogin(res);
+        if (result?.data) {
+          Message.success("登录成功 !");
+          setLogoinModalVisiable(false);
+          setConfirmLoading(false);
+        } else {
+          // 这里要去根据报错判断
+          Message.error(result.response.data.message);
+          setConfirmLoading(false);
+        }
       });
     } else if (activeTab === "2") {
       formCodeLogoIn.validate().then(async (res) => {
-        requestLoginParams = res;
+        const result: any = await userAsync.fetchLogin(res);
+        if (result?.data) {
+          Message.success("登录成功 !");
+          setLogoinModalVisiable(false);
+          setConfirmLoading(false);
+        } else {
+          // 这里要去根据报错判断
+          Message.error(result.response.data.message);
+          setConfirmLoading(false);
+        }
       });
     } else {
       formRegister.validate().then(async (res) => {
-        requestLoginParams = res;
+        const result: any = await userAsync.fetchRegister(res);
+        if (result?.data) {
+          Message.success("注册登录成功 !");
+          setLogoinModalVisiable(false);
+          setConfirmLoading(false);
+        } else {
+          // 这里要去根据报错判断
+          Message.error(result.response.data.message);
+          setConfirmLoading(false);
+        }
       });
     }
-    if (activeTab === "1" || activeTab === "2") {
-      const result = await userAsync.fetchLogin(requestLoginParams);
-      if (result?.data) {
-        Message.success("登录成功 !");
-        setLogoinModalVisiable(false);
-      } else {
-        // 这里要去根据报错判断
-        Message.error("登录失败!");
-      }
-    } else {
-      const result = await userAsync.fetchRegister(requestLoginParams);
-      if (result?.data) {
-        Message.success("注册登录成功 !");
-        setLogoinModalVisiable(false);
-      } else {
-        // 这里要去根据报错判断
-        Message.error("注册失败!");
-      }
-    }
-    setConfirmLoading(false);
   };
   const getCode = async () => {
     setgGtCodeLoading(true);
@@ -78,6 +86,7 @@ function LogoinModal() {
     }
     try {
       await generateCode({ email: email });
+      setSeconds(60);
       Message.success("验证码发送成功!");
     } catch (error: any) {
       // 这里要去根据报错判断
@@ -85,13 +94,24 @@ function LogoinModal() {
     }
     setgGtCodeLoading(false);
   };
+
+
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+    }, 1000);
+  }, [seconds]);
+  console.log("seconds",seconds)
+
+  console.log(confirmLoading);
   return (
     <Modal
       title={<div className="text-white ">登录/注册</div>}
       mountOnEnter={false}
       visible={logoinModalVisiable}
-      confirmLoading={confirmLoading}
-      onCancel={() => setLogoinModalVisiable(false)}
       maskClosable={false}
       simple
       style={{
@@ -100,11 +120,7 @@ function LogoinModal() {
       }}
       footer={
         <div className="flex gap-10 justify-center">
-          <Button
-            loading={confirmLoading}
-            onClick={() => setLogoinModalVisiable(false)}
-            type="primary"
-          >
+          <Button type="primary" onClick={() => setLogoinModalVisiable(false)}>
             关闭
           </Button>
           <Button loading={confirmLoading} onClick={submitSign} type="primary">
@@ -193,7 +209,7 @@ function LogoinModal() {
                 <Input placeholder="请输入验证码" />
               </FormItem>
               <Button type="primary" loading={getCodeLoading} onClick={getCode}>
-                发送验证码
+                {seconds === 0 ? "发送验证码" : seconds}
               </Button>
             </div>
           </Form>

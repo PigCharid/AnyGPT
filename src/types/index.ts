@@ -58,6 +58,7 @@ export interface ChatsInfo {
 }
 export interface ChatGpt {
     id: string
+    reChatID: number
     text: string
     dateTime: string
     status: 'pass' | 'loading' | 'error'

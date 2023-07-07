@@ -1,8 +1,8 @@
 import axios from "axios";
 import { RequestLoginParams, RequestCreateProjectParams } from '../types'
 
-const API = axios.create({ baseURL: "http://localhost:8000" });
-// const API = axios.create({ baseURL: "https://api.anygpt.org" });
+// const API = axios.create({ baseURL: "http://localhost:8000" });
+const API = axios.create({ baseURL: "https://api.anygpt.org" });
 API.interceptors.request.use((req) => {
     const userInfo: any = localStorage.getItem('user_storage');
     req.headers.Authorization = `Bearer ${JSON.parse(userInfo).state.token}`;
@@ -20,5 +20,5 @@ export const getProjects = () => API.get("/project");
 export const createProject = (params: RequestCreateProjectParams) => API.post("/project/create", params);
 
 // aichat
-export const aiChat = (params: { id: string, role: string, prompt: string, state?: string }) => API.post("/aichat", params);
+export const aiChat = (params: { id: string, reChatID: number, role: string, prompt: string, reChat: boolean, state?: string }) => API.post("/aichat", params);
 

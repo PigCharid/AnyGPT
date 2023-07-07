@@ -24,10 +24,7 @@ const CreateProjectModal = () => {
         creator: user_info?.username,
         createdAt: new Date(),
       };
-      console.log("params", params);
       const result = await projectAsync.fetchCreateProject(params);
-
-      console.log(result);
       setConfirmLoading(false);
 
       // setTimeout(() => {

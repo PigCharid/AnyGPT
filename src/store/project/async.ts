@@ -5,10 +5,8 @@ import { createProject, getProjects } from '../../request'
 export async function fetchGetProject() {
     try {
         const response = await getProjects()
-        console.log("获取的所有的项目信息", response)
         projectStore.getState().getProjects({ ...response.data })
         return response
-
     } catch (error) {
         console.log(error)
     }

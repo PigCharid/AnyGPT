@@ -7,12 +7,10 @@ export async function fetchLogin(params: RequestLoginParams) {
         const response = await signIn(params)
         userStore.getState().login({ ...response.data })
         return response
-
     } catch (error) {
         console.log(error)
-
+        return error
     }
-
 }
 export async function fetchRegister(params: RequestLoginParams) {
     try {
@@ -22,6 +20,7 @@ export async function fetchRegister(params: RequestLoginParams) {
 
     } catch (error) {
         console.log(error)
+        return error
     }
 }
 // eslint-disable-next-line
